@@ -113,10 +113,17 @@ export default function LightRays({
       if (!containerRef.current) return;
 
       const renderer = new Renderer({ dpr: Math.min(window.devicePixelRatio, 2), alpha: true });
+      const gl = renderer.gl as unknown as WebGL2RenderingContext;
+
+      if (!(gl instanceof WebGL2RenderingContext)) {
+        console.error('WebGL2 is not supported in this environment.');
+        return;
+      }
+
       rendererRef.current = renderer;
 
-      const gl = renderer.gl as WebGLRenderingContext;
-      const canvas = gl.canvas as unknown as HTMLCanvasElement;
+      const canvas = gl.canvas as HTMLCanvasElement; // Removed unnecessary type assertion
+      // Removed the line: gl.canvas = canvas;
       canvas.style.width = '100%';
       canvas.style.height = '100%';
 
@@ -156,9 +163,9 @@ float noise(vec2 st){return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.
       };
       uniformsRef.current = uniforms;
 
-      const geometry = new Triangle(gl);
-      const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
-      const mesh = new Mesh(gl, { geometry, program });
+      const geometry = new Triangle(gl as any);
+      const program = new Program(gl as any, { vertex: vert, fragment: frag, uniforms });
+      const mesh = new Mesh(gl as any, { geometry, program });
       meshRef.current = mesh;
 
       const updatePlacement = () => {

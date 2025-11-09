@@ -70,4 +70,10 @@ export const profile = {
     { name: "Hindi", level: "Novice" },
     { name: "Spanish", level: "Intermediate" },
   ],
+  scripts: {
+    dev: "next dev",
+    build: "next build",
+    start: "next start",
+    lint: "next lint"
+  }
 } as const;
